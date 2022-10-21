@@ -1,0 +1,45 @@
+# action name
+name: CI Workflow
+
+# 要在哪個 Branch 上: 
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+  workflow_dispatch:
+  
+# 流程
+  # 有一個 Go env
+  # 確認我們 Repo 上的 Code
+  # 下載需要的 Go Modules
+  # Build 一下(可以不要用)
+  # 編一個 Docker Image
+  # 跑你寫出來的 Unit testing
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    #流程
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: latest
+      - name: Check out Code
+        uses: actions/checkout@v2
+
+      - name: Fetch required Go modules
+        run: go mod download
+        
+      - name: Build Docker image
+        uses: docker/build-push-action@v2
+        with: 
+          push: false
+          tags: ${{ github.event.repository.name }}:latest, ${{ github.repository }}:latest
+          
+      - name: Run functional Test
+        run: go test -v
+    
