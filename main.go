@@ -7,10 +7,11 @@ import (
 )
 
 func main() {
+	// controller.WebpTrans()
 	server := gin.Default()
 	server.LoadHTMLGlob("template/*")
 	server.GET("/", controller.HomepageHandler)
 	server.GET("/index")
 
-	server.Run()
+	server.Run(":8888")
 }
